@@ -1,0 +1,475 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+
+
+
+
+
+
+{% block galery %}
+
+
+<div class="flex bg-gray-50 ">
+
+    <div id="gallery" class="relative w-full" data-carousel="slide">
+
+        <!-- Carousel wrapper -->
+        <div class="relative h-56 overflow-hidden rounded-lg md:h-96" id="best-product">
+
+
+
+
+
+        </div>
+
+
+
+        <!-- Slider controls -->
+        <button type="button"
+            class="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
+            data-carousel-prev>
+            <span
+                class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                <svg class="w-4 h-4 text-blue-700 dark:text-gray-800" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M5 1 1 5l4 4" />
+                </svg>
+                <span class="sr-only">Previous</span>
+            </span>
+        </button>
+        <button type="button"
+            class="absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
+            data-carousel-next>
+            <span
+                class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                <svg class="w-4 h-4 text-blue-700 dark:text-gray-800" aria-hidden="true"
+                    xmlns="http www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m1 9 4-4-4-4" />
+                </svg>
+                <span class="sr-only">Next</span>
+            </span>
+        </button>
+    </div>
+
+
+</div>
+{% endblock %}
+
+
+
+
+{% block content %}
+{% include 'recommendation-product-component.html' %}
+
+
+
+
+
+<div style="padding: 100px 100px; margin: 0px 10px; border-radius: 5px; margin-top: 50px;" class="rounded-lg border border-gray-100 ">
+
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 content-around" id="container">
+
+    </div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var category = "{{ category }}";
+
+        if (category == "None") {
+            var url = "api/get-product-random/";
+        } else {
+            var url = `api/get-product/${category}/`;
+        }
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Verileri işlemek için data değişkenini kullanabilirsiniz
+                console.log(data);
+                createProductContainer(data.products);
+                createBestProduct(data.products);
+
+            })
+            .catch(error => {
+                console.error("Hata oluştu:", error);
+            });
+
+    });
+
+
+
+
+
+
+
+
+
+
+    function createProductContainer(data) {
+
+        var container = document.getElementById('container');
+
+
+        for (let i = 0; i < Object.keys(data).length; i++) {
+            // console.log(i)
+
+            var html = `
+            
+<div class="relative p-4 flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
+    <a class="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl" href="{% url 'product_details' %}?product_id=${data[i].id}">
+        <img class="object-cover" src="{% static 'images/products/' %}${data[i].image_name}" alt="product image" />
+        <span
+            class="absolute top-0 left-0 m-2 rounded-full bg-black px-2 text-center text-sm font-medium text-white">39%
+            OFF</span>
+    </a>
+    <div class="mt-4 px-5 pb-5">
+        <a href="#">
+
+<h5 class="text-xl tracking-tight text-slate-900 product-name-title" style="max-height: 80px; min-height: 80px; overflow: hidden;">
+  ${data[i].product_name}
+</h5>
+
+      
+        </a>
+        <div class="mt-2 mb-5 flex items-center justify-between">
+            <p>
+                <span class="text-xl font-bold text-slate-900">${data[i].price}</span>
+            </p>
+            <div class="flex items-center">
+                <svg aria-hidden="true" class="h-5 w-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                    </path>
+                </svg>
+                <svg aria-hidden="true" class="h-5 w-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                    </path>
+                </svg>
+                <svg aria-hidden="true" class="h-5 w-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                    </path>
+                </svg>
+                <svg aria-hidden="true" class="h-5 w-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                    </path>
+                </svg>
+                <svg aria-hidden="true" class="h-5 w-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                    </path>
+                </svg>
+                <span class="mr-2 ml-3 rounded bg-yellow-200 px-2.5 py-0.5 text-xs font-semibold">${data[i].rating_score}</span>
+            </div>
+        </div>
+        <a href="#"
+            class="flex items-center justify-center rounded-md bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-6 w-6" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            Sepete Ekle</a>
+    </div>
+    </div>
+            
+            `;
+
+
+
+
+
+
+            container.innerHTML += html;
+
+           
+
+
+        }
+
+
+
+    }
+
+
+    function checkFeatures(feature_value) {
+
+        if (feature_value == 0) {
+            return "";
+        } else {
+            return feature_value.replace("|", " - ")
+        }
+
+    }
+
+
+
+    function createBestProduct(data) {
+
+
+
+        var best_product = document.getElementById('best-product');
+
+
+        for (let i = 0; i < 5; i++) {
+
+
+            var html = `
+
+            <a href="{% url 'product_details' %}?product_id=${data[i].id}"> 
+            <div class="hidden duration-700 ease-in-out" data-carousel-item>
+
+<div class="absolute block max-w-full h-auto -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+
+
+
+
+
+
+
+    <section style="width: 90vw;">
+
+        <div class="m-4 bg-white mx-auto max-w-screen-lg rounded-md border border-gray-100 text-gray-600 shadow-md">
+          <div class="relative flex h-full flex-col text-gray-600 md:flex-row">
+
+            <div class="mx-auto items-center flex px-5 pt-1 md:p-8 cut-image-prent">
+
+                <img  style="height: 300px;" class="block max-w-full cut-image" src="{% static 'images/products/' %}${data[i].image_name}" alt="Shop image" />
+              </div>
+
+
+
+
+            <div class="relative p-8 md:w-4/6"> 
+              <div class="flex flex-col md:flex-row">
+                <h2 class="mb-2 text-lg font-black ">${data[i].product_name}</h2>
+              </div>
+              
+              <div class="mt-8 flex flex-col sm:flex-row">
+
+
+                <div class="grid grid-rows-2 grid-cols-4 gap-4">
+                    <div class="p-4 border rounded shadow font-bold">${checkFeatures(data[i].feature_0)}</div>
+                    <div class="p-4 border rounded shadow font-bold">${checkFeatures(data[i].feature_1)}</div>
+                    <div class="p-4 border rounded shadow font-bold">${checkFeatures(data[i].feature_2)}</div>
+                    <div class="p-4 border rounded shadow font-bold">${checkFeatures(data[i].feature_3)}</div>
+                    <div class="p-4 border rounded shadow font-bold">${checkFeatures(data[i].feature_4)}</div>
+                    <div class="p-4 border rounded shadow font-bold">${checkFeatures(data[i].feature_5)}</div>
+                    <div class="p-4 border rounded shadow font-bold">${checkFeatures(data[i].feature_6)}</div>
+                    <div class="p-4 border rounded shadow font-bold">${checkFeatures(data[i].feature_7)}</div>
+
+                </div>
+                  
+            
+            
+                </div>
+
+
+
+                <div class="flex flex-col md:flex-row md:items-end">
+                    <p class="mt-6 mr-6 text-4xl font-black">${data[i].price}</sup></p>
+
+
+
+
+
+                <div class="flex items-center mt-6 ml-6">
+                    <svg aria-hidden="true" class="h-10 w-10 text-yellow-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                        </path>
+                    </svg>
+                    <svg aria-hidden="true" class="h-10 w-10 text-yellow-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                        </path>
+                    </svg>
+                    <svg aria-hidden="true" class="h-10 w-10 text-yellow-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                        </path>
+                    </svg>
+                    <svg aria-hidden="true" class="h-10 w-10 text-yellow-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                        </path>
+                    </svg>
+                    <svg aria-hidden="true" class="h-10 w-10 text-yellow-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                        </path>
+                    </svg>
+                    <span class="mr-2 ml-3 rounded bg-yellow-200 px-3 py-1 text-2xl font-semibold">${data[i].rating_score}</span>
+                </div>
+
+
+
+
+                    
+                    <div class="text-xl text-blue-700 font-bold dark:text-white" style="padding: 10px; margin-top: 20px; right: 0; margin-left: auto;">En Çok Görüntülenen</div>
+
+                </div>
+
+
+
+            </div>
+            
+
+
+
+
+
+            
+          </div>
+        </div>
+        
+        </section>
+
+
+</div>
+
+</div>
+            
+</a>
+            
+            
+            
+            
+            
+            
+            
+            `;
+
+            best_product.innerHTML += html;
+
+
+            
+
+        }
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+<script>
+    document.querySelectorAll('.product-name-title').forEach(function (element) {
+        if (element.scrollHeight > 100) { // 100px yüksekliği aşan metinleri işaretleyin
+            element.innerHTML = element.textContent.trim() + '...'; // '...' ekleyin
+        }
+    });
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

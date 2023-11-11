@@ -1,0 +1,83 @@
+<nav class="bg-blue-700 border-gray-200 dark:bg-gray-900">
+    <div class="flex  items-center justify-between  p-3">
+
+
+        <a href="{% url 'index' %}" class="flex">
+            <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 mr-3 hidden md:block"
+                alt="Flowbite Logo" />
+            <span
+                class="self-center text-white text-2xl mb-1 sm:mb-3 font-semibold whitespace-nowrap dark:text-white">e_commerce</span>
+        </a>
+
+
+        {% if current_user.is_authenticated %}
+
+
+
+
+
+        <div class="flex items-center">
+            <div class="flex items-center ml-3">
+
+                <div>
+
+                    <button type="button"
+                        class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                        aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                        <span class="sr-only">Open user menu</span>
+
+                        <div
+                            class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+                            <span class="font-medium text-gray-600 dark:text-gray-300 uppercase">
+                                {{ current_user.first_name|slice:"0:1" }}{{ current_user.last_name|slice:"0:1"}}
+                            </span>
+                        </div>
+
+                    </button>
+                </div>
+                <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600"
+                    id="dropdown-user">
+                    <div class="px-4 py-3" role="none">
+                        <p class="text-sm text-gray-900 dark:text-white" role="none">
+                            {{ current_user.first_name }} {{ current_user.last_name }}
+                        </p>
+                        <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
+                            {{ current_user.email }}
+                        </p>
+                    </div>
+
+
+
+                    <ul class="py-1" role="none">
+                        <li>
+                            <a href="{% url 'logout' %}"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                role="menuitem">Sign out</a>
+                        </li>
+                    </ul>
+
+
+
+                </div>
+            </div>
+
+
+            {% else %}
+            <div class="flex items-center">
+
+                <a type="button" href="{% url 'login' %}"
+                    class="py-2 px-4 mr-2 mt-3 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">log
+                    in</a>
+                <a type="button" href="{% url 'register' %}"
+                    class="focus:outline-none mt-3 text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">Register</a>
+
+
+            </div>
+            {% endif %}
+
+
+
+        </div>
+
+    </div>
+</nav>
